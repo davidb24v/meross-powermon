@@ -1,0 +1,3 @@
+[submodule "iwlist"]
+	path = iwlist
+	url = https://github.com/iancoleman/python-iwlist.git
