@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
-setup(name='meross_utils',
+setup(name='meross-powermon',
       version='0.1',
-      description='Tools for managing and monitoring local Meross Devices',
-      url='',
+      description='Tools for managing local Meross energy monitoring plugs',
+      url='http://server/',
       author='Dave Boulton',
       author_email='email addy',
       license='',
