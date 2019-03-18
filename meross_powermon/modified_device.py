@@ -15,6 +15,7 @@ from paho.mqtt import MQTTException
 from meross_iot.supported_devices.power_plugs import (Device, ClientStatus)
 from meross_iot.utilities.synchronization import AtomicCounter
 
+
 class ModifiedDevice(Device):
 
     def __init__(self,
@@ -66,8 +67,9 @@ class ModifiedDevice(Device):
         hashed_password = md5_hash.hexdigest()
 
         # Start the mqtt client
+        # ex. app-id -> app:08d4c9f99da40203ebc798a76512ec14
         self._mqtt_client = mqtt.Client(client_id=self._client_id,
-                                        protocol=mqtt.MQTTv311)  # ex. app-id -> app:08d4c9f99da40203ebc798a76512ec14
+                                        protocol=mqtt.MQTTv311)
         self._mqtt_client.on_connect = self._on_connect
         self._mqtt_client.on_message = self._on_message
         self._mqtt_client.on_disconnect = self._on_disconnect
@@ -85,7 +87,8 @@ class ModifiedDevice(Device):
         self._mqtt_client.connect(self._domain, self._port, keepalive=30)
         self._set_status(ClientStatus.CONNECTING)
 
-        # Starts a new thread that handles mqtt protocol and calls us back via callbacks
+        # Starts a new thread that handles mqtt protocol and calls us back
+        # via callbacks
         self._mqtt_client.loop_start()
 
         with self._waiting_subscribers_queue:
@@ -105,8 +108,19 @@ class Mss310(ModifiedDevice):
     def turn_on(self):
         if self._hwversion.split(".")[0] == "2":
             payload = {'togglex': {"onoff": 1}}
-            return self._execute_cmd("SET", "Appliance.Control.ToggleX", payload)
+            return self._execute_cmd("SET", "Appliance.Control.ToggleX",
+                                     payload)
         else:
             payload = {"channel": 0, "toggle": {"onoff": 1}}
-            return self._execute_cmd("SET", "Appliance.Control.Toggle", payload)
+            return self._execute_cmd("SET", "Appliance.Control.Toggle",
+                                     payload)
 
+    def turn_off(self):
+        if self._hwversion.split(".")[0] == "2":
+            payload = {'togglex': {"onoff": 0}}
+            return self._execute_cmd("SET", "Appliance.Control.ToggleX",
+                                     payload)
+        else:
+            payload = {"channel": 0, "toggle": {"onoff": 0}}
+            return self._execute_cmd("SET", "Appliance.Control.Toggle",
+                                     payload)

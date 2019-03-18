@@ -5,9 +5,10 @@ import os
 import sys
 from pathlib import Path
 
-from utils import mangle
+from meross_powermon.utils import mangle
+from meross_powermon.modified_device import Mss310
 
-CONFIG = "~/.config/meross/config.json"
+CONFIG = "~/.config/meross_powermon/config.json"
 
 
 def go(opts):
@@ -39,8 +40,14 @@ def exists(user=CONFIG, fail=True):
 def load(user=CONFIG):
     cfgfile = Path.expanduser(Path(user))
     if not cfgfile.exists():
+        # Prevent root triggering this for the user config
+        if os.getuid() == 0 and "~" not in user:
+            msg = 'No user configuration file "{}".\n'.format(cfgfile)
+            msg += 'Ask user to run "meross init" before continuing.'
+            sys.exit(msg)
         cfgfile.parent.mkdir(parents=True, exist_ok=True)
         save(dict())
+        return dict()
     cfg = json.loads(cfgfile.read_text())
     return cfg
 
@@ -56,7 +63,7 @@ def root_update(cfg, opts):
 
 
 def user_config_file(user):
-    return "/home/" + user + "/.config/meross/config.json"
+    return "/home/" + user + "/.config/meross_powermon/config.json"
 
 
 def load_user(user):
@@ -75,6 +82,7 @@ def save_user(cfg, user):
 
 def add_device(dev, opts, user):
     cfg = load_user(user)
+    cfg["devices"] = cfg.get("devices", dict())
     devices = cfg.get("devices")
     if list(dev.keys())[0] in devices:
         if not opts.force:
@@ -85,3 +93,21 @@ def add_device(dev, opts, user):
 
 def list_devices(cfg):
     return list(cfg["devices"].keys())
+
+
+def connect(name):
+    cfg = load()
+    devices = list_devices(cfg)
+    if name in devices:
+        p = dict()
+        p["domain"] = cfg["server"]
+        p["port"] = cfg["port"]
+        p["ca_cert"] = cfg["ca_cert"]
+        device = cfg["devices"][name]
+        key = mangle(name)
+        p["uuid"] = device["hardware"]["uuid"]
+        p["devName"] = name
+        p["devType"] = device["hardware"]["type"]
+        p["hdwareVersion"] = device["hardware"]["version"]
+        p["fmwareVersion"] = device["firmware"]["version"]
+        return Mss310("token", key, None, **p)

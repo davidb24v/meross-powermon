@@ -1,19 +1,43 @@
 # -*- coding: utf-8 -*-
 
+import argcomplete
 import argparse
 import base64
 import sys
 import os
 
-from version import VERSION
-import config
-import delete
-import init
-import monitor
-import setup
+from meross_powermon.version import VERSION
+import meross_powermon.config as config
+import meross_powermon.delete as delete
+import meross_powermon.init as init
+import meross_powermon.monitor as monitor
+import meross_powermon.setup as setup
 
 
-def arguments():
+def devices(prefix, parsed_args, **kwargs):
+    config.exists(fail=True)
+    cfg = config.load()
+    result = ["all"]
+    result.extend(config.list_devices(cfg))
+    if not prefix.startswith("~"):
+        pre = ""
+        pfx = prefix
+    else:
+        pre = "~"
+        pfx = prefix.lstrip("~")
+
+    return [pre + name for name in result if name.startswith(pfx)]
+
+
+def just_devices(prefix, parsed_args, **kwargs):
+    config.exists(fail=True)
+    cfg = config.load()
+    result = []
+    result.extend(config.list_devices(cfg))
+    return [name for name in result if name.startswith(prefix)]
+
+
+def arguments(*args):
     # Parser to store arguments
     parser = argparse.ArgumentParser(description="meross ({}) - A tool for "
                                                  "local use of Meross IoT "
@@ -51,16 +75,26 @@ def arguments():
         subcommands["delete"] = delete
         mon_d = subparser.add_parser("delete",
                                      description="Delete named device")
-        mon_d.add_argument('name', help="Remove named device ")
+        mon_d.add_argument('name', help="Remove named device "
+                           ).completer = just_devices
         # Monitor (normal user)
         subcommands["monitor"] = monitor
         mon_p = subparser.add_parser("monitor",
                                      description="Monitor device(s)")
-        mon_p.add_argument('name', nargs="?", default="all",
+        mon_p.add_argument("--delay", type=int, default=5,
+                           help="Delay between polling device (default=5s)")
+        mon_p.add_argument("--abserr", type=float, default=1000,
+                           help="Absolute error tolerance in mW "
+                                "(default: 1000)")
+        mon_p.add_argument("--relerr", type=float, default=0.05,
+                           help="Relative error tolerance "
+                                "(default: 0.05)")
+        mon_p.add_argument('name', nargs="*", default=["all"],
                            help="Example monitoring of named devices. "
-                                "(Defalt: all devices)")
+                                "(Defalt: all devices)").completer = devices
 
-    return (parser.parse_args(), subcommands)
+    argcomplete.autocomplete(parser, always_complete_options=False)
+    return (parser.parse_args(*args), subcommands)
 
 
 def config_or_init_options(parser, required):
@@ -76,7 +110,7 @@ def config_or_init_options(parser, required):
     else:
         parser.add_argument('--server', required=required,
                             help="MQTT server")
-        parser.add_argument('--port', type=int, default=8883,
+        parser.add_argument('--port', type=int,
                             help="MQTT port (default: 8883)")
         parser.add_argument('--ca-cert', default=None,
                             help="Certificate for connecting to MQTT server")

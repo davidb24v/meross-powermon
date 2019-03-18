@@ -20,7 +20,7 @@ Give the name of the mqtt server, port number and path to certificate file if re
 
 `./meross init --server SERVER --port PORT --ca-cert /path/to/ca.crt`
 
-In both cases the configuration is stored in .config/meross/config.json relative to the home directory and has a "chmod 600" performed on it.
+In both cases the configuration is stored in .config/meross_utils/config.json relative to the home directory and has a "chmod 600" performed on it.
 
 Once that's done you don't need to think about those options, you can change them with a `config` sub-command though.
 
