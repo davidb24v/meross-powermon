@@ -10,7 +10,8 @@ from meross_powermon import init
 from meross_powermon import command_line as cmd
 from meross_powermon import config
 from meross_powermon.utils import mangle
-from tests.definitions import (DUMMY_CONTENTS, DUMMY_USER, DUMMY_DEVICE)
+from meross_powermon.tests.definitions import (DUMMY_CONTENTS, DUMMY_USER,
+                                               DUMMY_DEVICE)
 
 
 def test_no_root_cfg(tmpdir, as_root, config_path):
