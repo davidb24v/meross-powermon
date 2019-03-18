@@ -1,3 +1,8 @@
 include tox.ini
+include conftest.py
+include pytest.ini
+include .coveragerc
 include requirements.txt
 include README.md
+include meross
+include meross_powermon/tests/*

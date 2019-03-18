@@ -2,7 +2,7 @@
 
 import sys
 
-import meross_powermon.config as config
+from meross_powermon import config
 
 
 def go(opts):

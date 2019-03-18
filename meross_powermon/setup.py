@@ -8,8 +8,7 @@ import time
 import os
 import sys
 
-from meross_powermon.iwlist import iwlist
-import meross_powermon.config as config
+from meross_powermon import (iwlist, config)
 from meross_powermon.utils import mangle
 
 UPDOWN = "ip link set dev {} {}"

@@ -6,7 +6,7 @@ import time
 import logging
 from math import isclose
 
-import meross_powermon.config as config
+from meross_powermon import config
 from meross_powermon.modified_device import Mss310
 from meross_powermon.utils import mangle
 

@@ -1,7 +1,9 @@
-# meross-utils
+# meross-powermon
 Simple command line interface for local operation of Meross IoT kit
 
-Requires MerossIot and iwlist as a submodule
+Requires MerossIot to be installed.
+
+Incorporates iwlist.py from https://github.com/iancoleman/python-iwlist as I couldn't figure out how to include it without running into problems when trying to package this stuff up so it was suitable for "pip install".
 
 You have to be root to run all of the wifi commands to connect to Meross device. This assumes that root will only run the "setup" phase for each device and that a user, will run everything else.
 
@@ -20,7 +22,7 @@ Give the name of the mqtt server, port number and path to certificate file if re
 
 `./meross init --server SERVER --port PORT --ca-cert /path/to/ca.crt`
 
-In both cases the configuration is stored in .config/meross_utils/config.json relative to the home directory and has a "chmod 600" performed on it.
+In both cases the configuration is stored in .config/meross_powermon/config.json relative to the home directory and has a "chmod 600" performed on it.
 
 Once that's done you don't need to think about those options, you can change them with a `config` sub-command though.
 

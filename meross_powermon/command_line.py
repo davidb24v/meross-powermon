@@ -7,11 +7,7 @@ import sys
 import os
 
 from meross_powermon.version import VERSION
-import meross_powermon.config as config
-import meross_powermon.delete as delete
-import meross_powermon.init as init
-import meross_powermon.monitor as monitor
-import meross_powermon.setup as setup
+from meross_powermon import (config, delete, init, monitor, setup)
 
 
 def devices(prefix, parsed_args, **kwargs):

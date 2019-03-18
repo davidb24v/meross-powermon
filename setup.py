@@ -1,7 +1,9 @@
 from setuptools import setup, find_packages
 
+from meross_powermon.version import VERSION
+
 setup(name='meross-powermon',
-      version='0.1',
+      version=VERSION,
       description='Tools for managing local Meross energy monitoring plugs',
       url='http://server/',
       author='Dave Boulton',
@@ -9,8 +11,10 @@ setup(name='meross-powermon',
       license='',
       packages=find_packages(),
       install_requires=[
-          'meross-iot'
+          'meross-iot',
+          'argcomplete'
       ],
+      scripts=["meross"],
       classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: ?',

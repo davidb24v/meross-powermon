@@ -1,6 +1,6 @@
 [run]
 omit =
     # Skip iwlist
-    meross_powermon/iwlist/*.py
+    meross_powermon/iwlist.py
     # Omit modified_device
     meross_powermon/modified_device.py

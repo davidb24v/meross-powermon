@@ -5,8 +5,7 @@ import json
 import argparse
 import sys
 
-from meross_powermon import config
-from meross_powermon import setup
+from meross_powermon import (config, setup)
 from meross_powermon import command_line as cmd
 from meross_powermon.tests.definitions import (DUMMY_USER, DUMMY_DEVICE,
                                                DUMMY_CONTENTS)

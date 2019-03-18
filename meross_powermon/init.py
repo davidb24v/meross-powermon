@@ -2,7 +2,7 @@
 
 import os
 
-import meross_powermon.config as config
+from meross_powermon import config
 from meross_powermon.utils import mangle
 
 

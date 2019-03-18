@@ -1,3 +1,0 @@
-[submodule "iwlist"]
-	path = meross_powermon/iwlist
-	url = https://github.com/iancoleman/python-iwlist.git
