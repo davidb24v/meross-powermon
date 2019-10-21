@@ -33,5 +33,5 @@ requests==2.21.0
 six==1.12.0
 toml==0.10.0
 tox==3.7.0
-urllib3==1.24.1
+urllib3==1.24.2
 virtualenv==16.4.3
